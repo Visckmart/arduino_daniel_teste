@@ -116,8 +116,7 @@ void setBrightnessIR(long pressedKey) {
 
 // talvez funcione, deu erro antes, naqueles ifs
 int calculateVal(int increment, int val) {
-	if increment == 0 { return; } // Verify if there is increment, in order to the next line run correctly
-	increment > 0 ? val += 1 : val -= 1; // If increment is bigger than 0, sum 1 to val, else subtract 1
+	val += increment; // This will sum or subtract the value of increment from val. At least at this moment only +1 and -1 are being used.
 	
 	// Defensive driving: making sure val stays in the range 0-1023
 	if (val > 1023) { val = 1023; }
