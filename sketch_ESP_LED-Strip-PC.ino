@@ -79,19 +79,15 @@ WiFiServer server(80); //Set server port
 ////////////////////////////////////////////////////////////////////
 
 void WiFiStart() {
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
+  Serial.println("Connecting to " + ssid);
   WiFi.begin(ssid, password);
   WiFi.config(ip, gateway, subnet);
   while (WiFi.status() != WL_CONNECTED) {
     delay(100);
     Serial.print("_");
   }
-  Serial.println();
-  Serial.println("Done");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-  Serial.println("");
+  Serial.println("\n" + "Done");
+  Serial.print("IP address: " + WiFi.localIP() + "\n\n");
 
   server.begin();
 }
@@ -116,7 +112,7 @@ void setBrightnessIR(long pressedKey) {
 
 // talvez funcione, deu erro antes, naqueles ifs
 int calculateVal(int increment, int val) {
-	val += increment; // This will sum or subtract the value of increment from val. At least at this moment only +1 and -1 are being used.
+	val += increment; // This will sum or subtract the value of increment from val. So far only +1 and -1 are being used.
 	
 	// Defensive driving: making sure val stays in the range 0-1023
 	if (val > 1023) { val = 1023; }
@@ -127,9 +123,8 @@ int calculateVal(int increment, int val) {
 
 // testar
 void setRGBBrightnessIR(long pressedKey) {
-  
     Serial.println();
-    // Dá pra melhorar esses else ifs. Se pressedKey só pode ser um dos valores que estão sendo checados, o getHex pode ficar no final de tudo.
+	
     if (pressedKey == IR_UPR) {
         Serial.println("IR_UPR");
         r = calculateVal(+1, r);
@@ -162,8 +157,10 @@ void getHex(int red, int green, int blue) {
   red = map(red, 0, 1023, 0, 255);
   green = map(green, 0, 1023, 0, 255);
   blue = map(blue, 0, 1023, 0, 255);
+	
   long rgb = 0;
   rgb = ((long)red << 16) | ((long)green << 8 ) | (long)blue;
+	
   Serial.println("R:" + String(red) + " G:" + String(green) + " B:" + String(blue));
   Serial.println("Hex: 0x" + String(rgb, HEX));
   //hexString = String(rgb, HEX)
@@ -186,12 +183,13 @@ void setHex() {
 }
 
 //Compute current brightness value
-void getV() { // Acho que dá pra melhorar o nome dessa classe (+)
-  R = roundf(r / 10.23); //for 10bit pwm, was (r/2.55);
-  G = roundf(g / 10.23); //for 10bit pwm, was (g/2.55);
-  B = roundf(b / 10.23); //for 10bit pwm, was (b/2.55);
-  x = _max(R, G);
-  V = _max(x, B); // (+) e dessa variável
+int getV() { // Acho que dá pra melhorar o nome dessa classe (+)
+	R = roundf(r / 10.23); //for 10bit pwm, was (r/2.55);
+	G = roundf(g / 10.23); //for 10bit pwm, was (g/2.55);
+	B = roundf(b / 10.23); //for 10bit pwm, was (b/2.55);
+	x = _max(R, G);
+	V = _max(x, B); // (+) e dessa variável
+	return V;
 }
 
 //For serial debugging only
@@ -210,7 +208,7 @@ void getIR() {
   */
 
     // funciona
-    if ((results.value == IR_REPEAT) && (results.value != IR_OnOff)) {  // if repeat command (button held down)
+    if (results.value == IR_REPEAT && results.value != IR_OnOff) {  // if repeat command (button held down)
         results.value = lastCode;      // replace FFFF with last good code
     } else {
         lastCode = 0;
@@ -219,23 +217,25 @@ void getIR() {
 
 	// Deveria ter um 'return;' dentro de cada if desse pra ele não continuar lá pra baixo na função, não?
 	
+	void finishProccess() {
+		lastCode = results.value;     // record this as last good command
+		setHex();
+	}
+	
     if (results.value == IR_R) {    //when button '-' is pressed
-        lastCode = results.value;     // record this as last good command
         Serial.println("\n" + "Vermelho");
         hexString = "FF0000";
-        setHex();
+		finishProccess()
         
     } else if (results.value == IR_G) {    //when button '+' is pressed
-        lastCode = results.value;      // record this as last good command
         Serial.println("\n" + "Verde");
         hexString = "00FF00";
-        setHex();
+		finishProccess()
         
     } else if (results.value == IR_B) {    //when button '|<<' is pressed
-        lastCode = results.value;      // record this as last good command
         Serial.println("\n" + "Azul");
         hexString = "0000FF";
-        setHex();
+		finishProccess()
         
     } else if (results.value == IR_OnOff) {    //when button 'ON/OFF' is pressed
         lastCode = results.value;      // record this as last good command
@@ -308,8 +308,7 @@ void loop() {
         }
         //Serial.println(readString); //REMOVER!!!
         if (c == '\n') {
-          Serial.print("Request: "); //Uncomment for serial output
-          Serial.println(readString); //Uncomment for serial output
+          Serial.println("Request: " + readString); //Uncomment for serial output
 
           //Send reponse
           client.println("HTTP/1.1 200 OK");
@@ -338,8 +337,7 @@ void loop() {
             client.println(hexString);
               
           } else if (readString.indexOf("bright") > 0) { // Status brightness (%)
-            getV();
-            client.println(V);
+            client.println(getV());
           }
 
           showValues(); //REMOVER!!!
