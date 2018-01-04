@@ -54,6 +54,7 @@ unsigned long lastCode; // stores last IR code received
 IRrecv irrecv(RECV_PIN, CAPTURE_BUFFER_SIZE, TIMEOUT, true);
 decode_results results;  // Somewhere to store the results
 
+// MARK: - Setup
 void setup() {
   // set pin modes
   pinMode(redPin, OUTPUT);
@@ -92,6 +93,8 @@ void WiFiStart() {
 
   server.begin();
 }
+
+// MARK: Control functions
 
 void allOff() {
   state = 0;
@@ -153,6 +156,8 @@ void setRGBBrightnessIR(long pressedKey) {
 	getHex(r, g, b);
 }
 
+// MARK: Color functions
+
 const char* rainbowHex [6] = {"FF0000", "FF7F00", "FFFF00", "00FF00", "0000FF", "8B00FF"};
 
 // depende da função anterior para saber se funciona haha
@@ -194,15 +199,16 @@ int getV() { // Acho que dá pra melhorar o nome dessa classe
 }
 
 void rainbow() {
-    while (true) {
-        for( unsigned int a = 0; a < sizeof(rainbowHex)/sizeof(rainbowHex[0]); a = a + 1 )
-        {
-            hexString = rainbowHex[a];
-            setHex();
-            delay(0.5);
-        }
-    }
+	while (true) {
+		for( unsigned int a = 0; a < sizeof(rainbowHex)/sizeof(rainbowHex[0]); a = a + 1 ) {
+			hexString = rainbowHex[a];
+			setHex();
+			delay(0.5);
+		}
+	}
 }
+
+// MARK: Debug functions
 
 //For serial debugging only
 void showValues() {
@@ -290,6 +296,8 @@ void getIR() {
   */
 }
 
+// MARK: Operational function
+
 void loop() {
   //Reconnect on lost WiFi connection (superfluous - will reconnect anyway)
   /*if (WiFi.status() != WL_CONNECTED) {
@@ -297,18 +305,18 @@ void loop() {
     }
   */
 
-  WiFiClient client = server.available();
-
-  if (irrecv.decode(&results)) {
-    getIR();
-    showValues();
-  }
-
-    if (!client) { return; }
-
-  while (client.connected() && !client.available()) {
-    delay(1);
-  }
+	WiFiClient client = server.available();
+	
+	if (irrecv.decode(&results)) {
+		getIR();
+		showValues();
+	}
+	
+	if (!client) { return; }
+	
+	while (client.connected() && !client.available()) {
+		delay(1);
+	}
 
   //Respond on certain Homebridge HTTP requests
   if (client) {
