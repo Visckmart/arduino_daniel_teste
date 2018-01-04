@@ -6,8 +6,6 @@
     https://github.com/markszabo/IRremoteESP8266
 */
 
-/* Tudo o que está aí embaixo foi o Visckmart que fez, a não ser o que tá mal feito */
-
 #include <ESP8266WiFi.h>
 #include <math.h>
 
@@ -105,6 +103,7 @@ void allOff() {
   analogWrite(bluPin, 0);
 }
 
+// nao testado
 void setBrightnessIR(long pressedKey) {
   if (pressedKey = IR_BPlus) {
 
@@ -115,6 +114,7 @@ void setBrightnessIR(long pressedKey) {
 
 }
 
+// talvez funcione, deu erro antes, naqueles ifs
 int calculateVal(int increment, int val) {
   
   if (increment > 0) {              //   increment the value if increment is positive...
@@ -133,6 +133,7 @@ int calculateVal(int increment, int val) {
   return val;
 }
 
+// testar
 void setRGBBrightnessIR(long pressedKey) {
   
   if (pressedKey == IR_UPR) {
@@ -142,35 +143,35 @@ void setRGBBrightnessIR(long pressedKey) {
     getHex(r, g, b);
   }
   
-  else if (pressedKey == IR_UPG) {
+  if (pressedKey == IR_UPG) {
     Serial.println();
     Serial.println("IR_UPG");
     g = calculateVal(+1, g);
     getHex(r, g, b);
   }
   
-  else if (pressedKey == IR_UPB) {
+  if (pressedKey == IR_UPB) {
     Serial.println();
     Serial.println("IR_UPB");
     b = calculateVal(+1, b);
     getHex(r, g, b);
   }
   
-  else if (pressedKey == IR_DOWNR) {
+  if (pressedKey == IR_DOWNR) {
     Serial.println();
     Serial.println("IR_DOWNR");
     r = calculateVal(-1, r);
     getHex(r, g, b);
   }
   
-  else if (pressedKey == IR_DOWNG) {
+  if (pressedKey == IR_DOWNG) {
     Serial.println();
     Serial.println("IR_DOWNG");
     g = calculateVal(-1, g);
     getHex(r, g, b);
   }
   
-  else if (pressedKey == IR_DOWNB) {
+  if (pressedKey == IR_DOWNB) {
     Serial.println();
     Serial.println("IR_DOWNB");
     b = calculateVal(-1, b);
@@ -178,6 +179,7 @@ void setRGBBrightnessIR(long pressedKey) {
   }
 }
 
+// depende da função anterior para saber se funciona haha
 void getHex(int red, int green, int blue) {
   red = map(red, 0, 1023, 0, 255);
   green = map(green, 0, 1023, 0, 255);
@@ -239,6 +241,7 @@ void getIR() {
     digitalWrite(LED_BUILTIN, LOW);
   */
 
+	// funciona
   if ((results.value == IR_REPEAT) && (results.value != IR_OnOff))  // if repeat command (button held down)
   {
     results.value = lastCode;      // replace FFFF with last good code
@@ -292,19 +295,19 @@ void getIR() {
       allOff();
     }
   }
-
+  // ainda nao desenvolvido - skip
   if (results.value == IR_BPlus)    //when button '>>|' is pressed
   {
     lastCode = results.value;      // record this as last good command
 
   }
-
+	// ainda nao desenvolvido - skip
   if (results.value == IR_BMinus)    //when button '>>|' is pressed
   {
     lastCode = results.value;      // record this as last good command
 
   }
-
+  // goal
   if (results.value == IR_UPR || results.value == IR_UPG || results.value == IR_UPB || results.value == IR_DOWNR || results.value == IR_DOWNG || results.value == IR_DOWNB)    //when button '>>|' is pressed
   {
     lastCode = results.value;      // record this as last good command
