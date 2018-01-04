@@ -6,6 +6,8 @@
     https://github.com/markszabo/IRremoteESP8266
 */
 
+/* Tudo o que está aí embaixo foi o Visckmart que fez, a não ser o que tá mal feito */
+
 #include <ESP8266WiFi.h>
 #include <math.h>
 
