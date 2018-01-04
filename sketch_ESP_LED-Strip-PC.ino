@@ -111,7 +111,7 @@ void setBrightnessIR(long pressedKey) {
 }
 
 // talvez funcione, deu erro antes, naqueles ifs
-int calculateVal(int increment, int val) {
+int incrementAndLimit(int &val, int increment) {
 	val += increment; // This will sum or subtract the value of increment from val. So far only +1 and -1 are being used.
 	
 	// Defensive driving: making sure val stays in the range 0-1023
@@ -127,27 +127,27 @@ void setRGBBrightnessIR(long pressedKey) {
 	
     if (pressedKey == IR_UPR) {
         Serial.println("IR_UPR");
-        r = calculateVal(+1, r);
+        incrementAndLimit(r, +1);
 		
     } else if (pressedKey == IR_UPG) {
         Serial.println("IR_UPG");
-        g = calculateVal(+1, g);
+        incrementAndLimit(g, +1);
 		
     } else if (pressedKey == IR_UPB) {
         Serial.println("IR_UPB");
-        b = calculateVal(+1, b);
+        incrementAndLimit(b, +1);
 		
     } else if (pressedKey == IR_DOWNR) {
         Serial.println("IR_DOWNR");
-        r = calculateVal(-1, r);
+        incrementAndLimit(r, -1);
 		
     } else if (pressedKey == IR_DOWNG) {
         Serial.println("IR_DOWNG");
-        g = calculateVal(-1, g);
+        incrementAndLimit(g, -1);
 		
     } else if (pressedKey == IR_DOWNB) {
         Serial.println("IR_DOWNB");
-        b = calculateVal(-1, b);
+        incrementAndLimit(b, -1);
     }
 	getHex(r, g, b);
 }
@@ -161,7 +161,7 @@ void getHex(int red, int green, int blue) {
   long rgb = 0;
   rgb = ((long)red << 16) | ((long)green << 8 ) | (long)blue;
 	
-  Serial.println("R:" + String(red) + " G:" + String(green) + " B:" + String(blue));
+  Serial.println("R: " + String(red) " | " + "G: " + String(green) + " | " + "B: " + String(blue));
   Serial.println("Hex: 0x" + String(rgb, HEX));
   //hexString = String(rgb, HEX)
   //setHex();
@@ -183,13 +183,11 @@ void setHex() {
 }
 
 //Compute current brightness value
-int getV() { // Acho que dá pra melhorar o nome dessa classe (+)
+int getV() { // Acho que dá pra melhorar o nome dessa classe
 	R = roundf(r / 10.23); //for 10bit pwm, was (r/2.55);
 	G = roundf(g / 10.23); //for 10bit pwm, was (g/2.55);
 	B = roundf(b / 10.23); //for 10bit pwm, was (b/2.55);
-	x = _max(R, G);
-	V = _max(x, B); // (+) e dessa variável
-	return V;
+    return _max({R, G, B});
 }
 
 //For serial debugging only
