@@ -133,28 +133,28 @@ void setRGBBrightnessIR(long pressedKey) {
     if (pressedKey == IR_UPR) {
         Serial.println("IR_UPR");
         r = calculateVal(+1, r);
-        getHex(r, g, b);
+		
     } else if (pressedKey == IR_UPG) {
         Serial.println("IR_UPG");
         g = calculateVal(+1, g);
-        getHex(r, g, b);
+		
     } else if (pressedKey == IR_UPB) {
         Serial.println("IR_UPB");
         b = calculateVal(+1, b);
-        getHex(r, g, b);
+		
     } else if (pressedKey == IR_DOWNR) {
         Serial.println("IR_DOWNR");
         r = calculateVal(-1, r);
-        getHex(r, g, b);
+		
     } else if (pressedKey == IR_DOWNG) {
         Serial.println("IR_DOWNG");
         g = calculateVal(-1, g);
-        getHex(r, g, b);
+		
     } else if (pressedKey == IR_DOWNB) {
         Serial.println("IR_DOWNB");
         b = calculateVal(-1, b);
-        getHex(r, g, b);
     }
+	getHex(r, g, b);
 }
 
 // depende da função anterior para saber se funciona haha
@@ -217,35 +217,33 @@ void getIR() {
     }
 
 
+	// Deveria ter um 'return;' dentro de cada if desse pra ele não continuar lá pra baixo na função, não?
+	
     if (results.value == IR_R) {    //when button '-' is pressed
         lastCode = results.value;     // record this as last good command
-        Serial.println("");
-        Serial.println("Vermelho");
+        Serial.println("\n" + "Vermelho");
         hexString = "FF0000";
         setHex();
         
     } else if (results.value == IR_G) {    //when button '+' is pressed
         lastCode = results.value;      // record this as last good command
-        Serial.println("");
-        Serial.println("Verde");
+        Serial.println("\n" + "Verde");
         hexString = "00FF00";
         setHex();
         
     } else if (results.value == IR_B) {    //when button '|<<' is pressed
         lastCode = results.value;      // record this as last good command
-        Serial.println("");
-        Serial.println("Azul");
+        Serial.println("\n" + "Azul");
         hexString = "0000FF";
         setHex();
         
     } else if (results.value == IR_OnOff) {    //when button 'ON/OFF' is pressed
         lastCode = results.value;      // record this as last good command
-        Serial.println("");
         if (state == 0) { // se estiver desligado, liga com a ultima cor ainda guardada na variavel hexString
-            Serial.println("Liga");
+            Serial.println("\n" + "Liga");
             setHex();
         } else { // se estiver ligado, executa o procedimento para desligar todos as cores
-            Serial.println("Desliga");
+            Serial.println("\n" + "Desliga");
             allOff();
         }
     }
