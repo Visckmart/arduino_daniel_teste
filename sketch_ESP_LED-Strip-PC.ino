@@ -67,6 +67,7 @@ void setup() {
   WiFiStart();
   //showValues(); //Uncomment for serial output
   irrecv.enableIRIn(); // Start the receiver
+    rainbow();
 }
 
 ///// WiFi SETTINGS - Replace with your values /////////////////
@@ -152,6 +153,8 @@ void setRGBBrightnessIR(long pressedKey) {
 	getHex(r, g, b);
 }
 
+const char* rainbowHex [6] = {"FF0000", "FF7F00", "FFFF00", "00FF00", "0000FF", "8B00FF"};
+
 // depende da função anterior para saber se funciona haha
 void getHex(int red, int green, int blue) {
   red = map(red, 0, 1023, 0, 255);
@@ -188,6 +191,17 @@ int getV() { // Acho que dá pra melhorar o nome dessa classe
 	G = roundf(g / 10.23); //for 10bit pwm, was (g/2.55);
 	B = roundf(b / 10.23); //for 10bit pwm, was (b/2.55);
     return _max({R, G, B});
+}
+
+void rainbow() {
+    while (true) {
+        for( unsigned int a = 0; a < sizeof(rainbowHex)/sizeof(rainbowHex[0]); a = a + 1 )
+        {
+            hexString = rainbowHex[a];
+            setHex();
+            delay(0.5);
+        }
+    }
 }
 
 //For serial debugging only
