@@ -142,35 +142,35 @@ void setRGBBrightnessIR(long pressedKey) {
     getHex(r, g, b);
   }
   
-  if (pressedKey == IR_UPG) {
+  else if (pressedKey == IR_UPG) {
     Serial.println();
     Serial.println("IR_UPG");
     g = calculateVal(+1, g);
     getHex(r, g, b);
   }
   
-  if (pressedKey == IR_UPB) {
+  else if (pressedKey == IR_UPB) {
     Serial.println();
     Serial.println("IR_UPB");
     b = calculateVal(+1, b);
     getHex(r, g, b);
   }
   
-  if (pressedKey == IR_DOWNR) {
+  else if (pressedKey == IR_DOWNR) {
     Serial.println();
     Serial.println("IR_DOWNR");
     r = calculateVal(-1, r);
     getHex(r, g, b);
   }
   
-  if (pressedKey == IR_DOWNG) {
+  else if (pressedKey == IR_DOWNG) {
     Serial.println();
     Serial.println("IR_DOWNG");
     g = calculateVal(-1, g);
     getHex(r, g, b);
   }
   
-  if (pressedKey == IR_DOWNB) {
+  else if (pressedKey == IR_DOWNB) {
     Serial.println();
     Serial.println("IR_DOWNB");
     b = calculateVal(-1, b);
