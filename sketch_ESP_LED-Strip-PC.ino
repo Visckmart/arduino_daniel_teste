@@ -103,12 +103,12 @@ void allOff() {
   analogWrite(bluPin, 0);
 }
 
-// nao testado
+// nao testado - troquei '=' pra '==' antes que dê merda
 void setBrightnessIR(long pressedKey) {
-  if (pressedKey = IR_BPlus) {
+  if (pressedKey == IR_BPlus) {
 
   }
-  if (pressedKey = IR_BMinus) {
+  if (pressedKey == IR_BMinus) {
 
   }
 
@@ -116,18 +116,16 @@ void setBrightnessIR(long pressedKey) {
 
 // talvez funcione, deu erro antes, naqueles ifs
 int calculateVal(int increment, int val) {
-  
   if (increment > 0) {              //   increment the value if increment is positive...
     val += 1;           
-  } 
-  else if (increment < 0) {         //   ...or decrement it if increment is negative
+  }  else if (increment < 0) {      //   ...or decrement it if increment is negative
     val -= 1;
   }
+    
   // Defensive driving: make sure val stays in the range 0-1023
   if (val > 1023) {
     val = 1023;
-  } 
-  else if (val < 0) {
+  } else if (val < 0) {
     val = 0;
   }
   return val;
@@ -136,47 +134,33 @@ int calculateVal(int increment, int val) {
 // testar
 void setRGBBrightnessIR(long pressedKey) {
   
-  if (pressedKey == IR_UPR) {
     Serial.println();
-    Serial.println("IR_UPR");
-    r = calculateVal(+1, r);
-    getHex(r, g, b);
-  }
-  
-  if (pressedKey == IR_UPG) {
-    Serial.println();
-    Serial.println("IR_UPG");
-    g = calculateVal(+1, g);
-    getHex(r, g, b);
-  }
-  
-  if (pressedKey == IR_UPB) {
-    Serial.println();
-    Serial.println("IR_UPB");
-    b = calculateVal(+1, b);
-    getHex(r, g, b);
-  }
-  
-  if (pressedKey == IR_DOWNR) {
-    Serial.println();
-    Serial.println("IR_DOWNR");
-    r = calculateVal(-1, r);
-    getHex(r, g, b);
-  }
-  
-  if (pressedKey == IR_DOWNG) {
-    Serial.println();
-    Serial.println("IR_DOWNG");
-    g = calculateVal(-1, g);
-    getHex(r, g, b);
-  }
-  
-  if (pressedKey == IR_DOWNB) {
-    Serial.println();
-    Serial.println("IR_DOWNB");
-    b = calculateVal(-1, b);
-    getHex(r, g, b);
-  }
+    // Dá pra melhorar esses else ifs. Se pressedKey só pode ser um dos valores que estão sendo checados, o getHex pode ficar no final de tudo.
+    if (pressedKey == IR_UPR) {
+        Serial.println("IR_UPR");
+        r = calculateVal(+1, r);
+        getHex(r, g, b);
+    } else if (pressedKey == IR_UPG) {
+        Serial.println("IR_UPG");
+        g = calculateVal(+1, g);
+        getHex(r, g, b);
+    } else if (pressedKey == IR_UPB) {
+        Serial.println("IR_UPB");
+        b = calculateVal(+1, b);
+        getHex(r, g, b);
+    } else if (pressedKey == IR_DOWNR) {
+        Serial.println("IR_DOWNR");
+        r = calculateVal(-1, r);
+        getHex(r, g, b);
+    } else if (pressedKey == IR_DOWNG) {
+        Serial.println("IR_DOWNG");
+        g = calculateVal(-1, g);
+        getHex(r, g, b);
+    } else if (pressedKey == IR_DOWNB) {
+        Serial.println("IR_DOWNB");
+        b = calculateVal(-1, b);
+        getHex(r, g, b);
+    }
 }
 
 // depende da função anterior para saber se funciona haha
@@ -241,60 +225,47 @@ void getIR() {
     digitalWrite(LED_BUILTIN, LOW);
   */
 
-	// funciona
-  if ((results.value == IR_REPEAT) && (results.value != IR_OnOff))  // if repeat command (button held down)
-  {
-    results.value = lastCode;      // replace FFFF with last good code
-  }
-  else
-  {
-    lastCode = 0;
-  }
-
-
-  if (results.value == IR_R)    //when button '-' is pressed
-  {
-    lastCode = results.value;     // record this as last good command
-    Serial.println("");
-    Serial.println("Vermelho");
-    hexString = "FF0000";
-    setHex();
-  }
-
-  if (results.value == IR_G)    //when button '+' is pressed
-  {
-    lastCode = results.value;      // record this as last good command
-    Serial.println("");
-    Serial.println("Verde");
-    hexString = "00FF00";
-    setHex();
-  }
-
-  if (results.value == IR_B)    //when button '|<<' is pressed
-  {
-    lastCode = results.value;      // record this as last good command
-    Serial.println("");
-    Serial.println("Azul");
-    hexString = "0000FF";
-    setHex();
-  }
-
-  if (results.value == IR_OnOff)    //when button 'ON/OFF' is pressed
-  {
-    lastCode = results.value;      // record this as last good command
-    Serial.println("");
-    if (state == 0) {
-      // se estiver desligado, liga com a ultima cor ainda guardada na variavel hexString
-      Serial.println("Liga");
-      setHex();
+    // funciona
+    if ((results.value == IR_REPEAT) && (results.value != IR_OnOff)) {  // if repeat command (button held down)
+        results.value = lastCode;      // replace FFFF with last good code
+    } else {
+        lastCode = 0;
     }
-    else
-    {
-      // se estiver ligado, executa o procedimento para desligar todos as cores
-      Serial.println("Desliga");
-      allOff();
+
+
+    if (results.value == IR_R) {    //when button '-' is pressed
+        lastCode = results.value;     // record this as last good command
+        Serial.println("");
+        Serial.println("Vermelho");
+        hexString = "FF0000";
+        setHex();
+        
+    } else if (results.value == IR_G) {    //when button '+' is pressed
+        lastCode = results.value;      // record this as last good command
+        Serial.println("");
+        Serial.println("Verde");
+        hexString = "00FF00";
+        setHex();
+        
+    } else if (results.value == IR_B) {    //when button '|<<' is pressed
+        lastCode = results.value;      // record this as last good command
+        Serial.println("");
+        Serial.println("Azul");
+        hexString = "0000FF";
+        setHex();
+        
+    } else if (results.value == IR_OnOff) {    //when button 'ON/OFF' is pressed
+        lastCode = results.value;      // record this as last good command
+        Serial.println("");
+        if (state == 0) { // se estiver desligado, liga com a ultima cor ainda guardada na variavel hexString
+            Serial.println("Liga");
+            setHex();
+        } else { // se estiver ligado, executa o procedimento para desligar todos as cores
+            Serial.println("Desliga");
+            allOff();
+        }
     }
-  }
+    
   // ainda nao desenvolvido - skip
   if (results.value == IR_BPlus)    //when button '>>|' is pressed
   {
@@ -339,9 +310,7 @@ void loop() {
     showValues();
   }
 
-  if (!client) {
-    return;
-  }
+    if (!client) { return; }
 
   while (client.connected() && !client.available()) {
     delay(1);
@@ -366,38 +335,27 @@ void loop() {
           //client.println("Connection: close");
           client.println();
 
-          //On
-          if (readString.indexOf("on") > 0) {
+          if (readString.indexOf("on") > 0) { // On
             setHex();
             //showValues();
-          }
-
-          //Off
-          if (readString.indexOf("off") > 0) {
+              
+          } else if (readString.indexOf("off") > 0) { // Off
             allOff();
             //showValues();
-          }
-
-          //Set color
-          if (readString.indexOf("set") > 0) {
+              
+          } else if (readString.indexOf("set") > 0) { // Set color
             hexString = "";
             hexString = (readString.substring(9, 15));
             setHex();
             //showValues();
-          }
-
-          //Status on/off
-          if (readString.indexOf("status") > 0) {
+              
+          } else if (readString.indexOf("status") > 0) { // Status on/off
             client.println(state);
-          }
-
-          //Status color (hex)
-          if (readString.indexOf("color") > 0) {
+              
+          } else if (readString.indexOf("color") > 0) { // Status color (hex)
             client.println(hexString);
-          }
-
-          //Status brightness (%)
-          if (readString.indexOf("bright") > 0) {
+              
+          } else if (readString.indexOf("bright") > 0) { // Status brightness (%)
             getV();
             client.println(V);
           }
