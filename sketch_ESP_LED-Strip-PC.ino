@@ -216,39 +216,38 @@ void getIR() {
         lastCode = 0;
     }
 
+	void recordCommand() { // record this as last good command
+		lastCode = results.value;
+		Serial.println("");
+	}
 
     if (results.value == IR_R) {    //when button '-' is pressed
-        lastCode = results.value;     // record this as last good command
-        Serial.println("");
+        recordCommand()
         Serial.println("Vermelho");
         hexString = "FF0000";
-        setHex();
         
     } else if (results.value == IR_G) {    //when button '+' is pressed
-        lastCode = results.value;      // record this as last good command
-        Serial.println("");
+        recordCommand()
         Serial.println("Verde");
         hexString = "00FF00";
-        setHex();
         
     } else if (results.value == IR_B) {    //when button '|<<' is pressed
-        lastCode = results.value;      // record this as last good command
-        Serial.println("");
+        recordCommand()
         Serial.println("Azul");
         hexString = "0000FF";
-        setHex();
         
     } else if (results.value == IR_OnOff) {    //when button 'ON/OFF' is pressed
-        lastCode = results.value;      // record this as last good command
-        Serial.println("");
+        recordCommand()
         if (state == 0) { // se estiver desligado, liga com a ultima cor ainda guardada na variavel hexString
             Serial.println("Liga");
-            setHex();
+			setHex();
         } else { // se estiver ligado, executa o procedimento para desligar todos as cores
             Serial.println("Desliga");
             allOff();
         }
+		return;
     }
+	setHex();
     
   // ainda nao desenvolvido - skip
   if (results.value == IR_BPlus)    //when button '>>|' is pressed
