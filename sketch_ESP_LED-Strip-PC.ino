@@ -116,19 +116,14 @@ void setBrightnessIR(long pressedKey) {
 
 // talvez funcione, deu erro antes, naqueles ifs
 int calculateVal(int increment, int val) {
-  if (increment > 0) {              //   increment the value if increment is positive...
-    val += 1;           
-  }  else if (increment < 0) {      //   ...or decrement it if increment is negative
-    val -= 1;
-  }
-    
-  // Defensive driving: make sure val stays in the range 0-1023
-  if (val > 1023) {
-    val = 1023;
-  } else if (val < 0) {
-    val = 0;
-  }
-  return val;
+	if increment == 0 { return; } // Verify if there is increment, in order to the next line run correctly
+	increment > 0 ? val += 1 : val -= 1; // If increment is bigger than 0, sum 1 to val, else subtract 1
+	
+	// Defensive driving: making sure val stays in the range 0-1023
+	if (val > 1023) { val = 1023; }
+	else if (val < 0) { val = 0; }
+	
+	return val;
 }
 
 // testar
@@ -192,30 +187,20 @@ void setHex() {
 }
 
 //Compute current brightness value
-void getV() {
+void getV() { // Acho que dá pra melhorar o nome dessa classe (+)
   R = roundf(r / 10.23); //for 10bit pwm, was (r/2.55);
   G = roundf(g / 10.23); //for 10bit pwm, was (g/2.55);
   B = roundf(b / 10.23); //for 10bit pwm, was (b/2.55);
   x = _max(R, G);
-  V = _max(x, B);
+  V = _max(x, B); // (+) e dessa variável
 }
 
 //For serial debugging only
 void showValues() {
-  Serial.print("Status on/off: ");
-  Serial.println(state);
-  Serial.print("RGB color: ");
-  Serial.print(r);
-  Serial.print(".");
-  Serial.print(g);
-  Serial.print(".");
-  Serial.println(b);
-  Serial.print("Hex color: ");
-  Serial.println(hexString);
-  getV();
-  Serial.print("Brightness: ");
-  Serial.println(V);
-  Serial.println("");
+	Serial.println("%s %d", "Status on/off:", state);
+	Serial.println("%s %d | %d | %d", "RGB color:", r, g, b);
+	Serial.println("%s %s", "Hex color:", hexString);
+	Serial.print("%s %s\n\n", "Brightness:", getV());
 }
 
 void getIR() {
