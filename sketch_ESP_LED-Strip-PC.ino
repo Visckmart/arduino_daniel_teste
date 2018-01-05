@@ -81,7 +81,7 @@ WiFiServer server(80); //Set server port
 ////////////////////////////////////////////////////////////////////
 
 void WiFiStart() {
-  Serial.println("Connecting to " + ssid);
+  Serial.println("Connecting to " + String(ssid));
   WiFi.begin(ssid, password);
   WiFi.config(ip, gateway, subnet);
   while (WiFi.status() != WL_CONNECTED) {
