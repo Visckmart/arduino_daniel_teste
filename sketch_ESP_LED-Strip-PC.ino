@@ -325,6 +325,7 @@ void loop() {
   */
 
 	WiFiClient client = server.available();
+	rainbow();
 	
 	if (irrecv.decode(&results)) {
 		getIR();
