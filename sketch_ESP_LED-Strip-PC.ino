@@ -68,7 +68,6 @@ void setup() {
   WiFiStart();
   //showValues(); //Uncomment for serial output
   irrecv.enableIRIn(); // Start the receiver
-    rainbow();
 }
 
 ///// WiFi SETTINGS - Replace with your values /////////////////
@@ -303,6 +302,7 @@ void getIR() {
     lastCode = results.value;      // record this as last good command
     setRGBBrightnessIR(results.value);
   }
+	rainbow();
 
   /*
     if(results.value == 0xFFC23D)     //when button '>>|' is pressed
