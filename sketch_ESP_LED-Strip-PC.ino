@@ -89,7 +89,9 @@ void WiFiStart() {
   }
 	Serial.println();
   Serial.println("Done");
-  Serial.print("IP address: " + String(WiFi.localIP()) + "\n\n");
+	Serial.print("IP address: ");
+	Serial.println(WiFi.localIP());
+	Serial.println("");
 
   server.begin();
 }
