@@ -89,7 +89,7 @@ void WiFiStart() {
     Serial.print("_");
   }
   Serial.println("\n" + "Done");
-  Serial.print("IP address: " + WiFi.localIP() + "\n\n");
+  Serial.print("IP address: " + String(WiFi.localIP()) + "\n\n");
 
   server.begin();
 }
@@ -214,10 +214,20 @@ void rainbow() {
 
 //For serial debugging only
 void showValues() {
-	Serial.println("%s %d", "Status on/off:", state);
-	Serial.println("%s %d | %d | %d", "RGB color:", r, g, b);
-	Serial.println("%s %s", "Hex color:", hexString);
-	Serial.print("%s %s\n\n", "Brightness:", getV());
+  Serial.print("Status on/off: ");
+  Serial.println(state);
+  Serial.print("RGB color: ");
+  Serial.print(r);
+  Serial.print(".");
+  Serial.print(g);
+  Serial.print(".");
+  Serial.println(b);
+  Serial.print("Hex color: ");
+  Serial.println(hexString);
+  getV();
+  Serial.print("Brightness: ");
+  Serial.println(V);
+  Serial.println("");
 }
 
 void getIR() {
@@ -243,27 +253,32 @@ void getIR() {
 	}
 	
     if (results.value == IR_R) {    //when button '-' is pressed
-        Serial.println("\n" + "Vermelho");
+		Serial.println();
+        Serial.println("Vermelho");
         hexString = "FF0000";
-		finishProccess()
+		finishProccess();
         
     } else if (results.value == IR_G) {    //when button '+' is pressed
-        Serial.println("\n" + "Verde");
+		Serial.println();
+        Serial.println("Verde");
         hexString = "00FF00";
-		finishProccess()
+		finishProccess();
         
     } else if (results.value == IR_B) {    //when button '|<<' is pressed
-        Serial.println("\n" + "Azul");
+		Serial.println();
+        Serial.println("Azul");
         hexString = "0000FF";
-		finishProccess()
+		finishProccess();
         
     } else if (results.value == IR_OnOff) {    //when button 'ON/OFF' is pressed
         lastCode = results.value;      // record this as last good command
         if (state == 0) { // se estiver desligado, liga com a ultima cor ainda guardada na variavel hexString
-            Serial.println("\n" + "Liga");
+			Serial.println();
+            Serial.println("Liga");
             setHex();
         } else { // se estiver ligado, executa o procedimento para desligar todos as cores
-            Serial.println("\n" + "Desliga");
+			Serial.println();
+            Serial.println("Desliga");
             allOff();
         }
     }
