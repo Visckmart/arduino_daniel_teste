@@ -357,26 +357,32 @@ void loop() {
 
           if (readString.indexOf("on") > 0) { // On
             setHex();
+			  rainbow();
             //showValues();
               
           } else if (readString.indexOf("off") > 0) { // Off
             allOff();
+			  rainbow();
             //showValues();
               
           } else if (readString.indexOf("set") > 0) { // Set color
             hexString = "";
             hexString = (readString.substring(9, 15));
             setHex();
+			  rainbow();
             //showValues();
               
           } else if (readString.indexOf("status") > 0) { // Status on/off
             client.println(state);
+			  rainbow();
               
           } else if (readString.indexOf("color") > 0) { // Status color (hex)
             client.println(hexString);
+			  rainbow();
               
           } else if (readString.indexOf("bright") > 0) { // Status brightness (%)
             client.println(getV());
+			  rainbow();
           }
 
           showValues(); //REMOVER!!!
