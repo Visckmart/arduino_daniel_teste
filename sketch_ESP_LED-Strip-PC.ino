@@ -217,7 +217,7 @@ void showValues() {
   Serial.println(hexString);
   getV();
   Serial.print("Brightness: ");
-  Serial.println(V);
+  Serial.println(String(getV()));
   Serial.println("");
 }
 
