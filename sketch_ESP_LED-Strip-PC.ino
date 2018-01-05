@@ -80,18 +80,17 @@ WiFiServer server(80); //Set server port
 ////////////////////////////////////////////////////////////////////
 
 void WiFiStart() {
-  Serial.println("Connecting to " + String(ssid));
+  printf("Connecting to %s", String(ssid));
   WiFi.begin(ssid, password);
   WiFi.config(ip, gateway, subnet);
   while (WiFi.status() != WL_CONNECTED) {
     delay(100);
-    Serial.print("_");
+    printf("_");
   }
-	Serial.println();
-  Serial.println("Done");
-	Serial.print("IP address: ");
-	Serial.println(WiFi.localIP());
-	Serial.println("");
+	printf("Done");
+	printf("IP address: ");
+	printf(WiFi.localIP());
+	printf("\n");
 
   server.begin();
 }
@@ -129,30 +128,30 @@ int incrementAndLimit(int &val, int increment) {
 
 // testar
 void setRGBBrightnessIR(long pressedKey) {
-    Serial.println();
+	printf("\n");
 	
     if (pressedKey == IR_UPR) {
-        Serial.println("IR_UPR");
+        printf("IR_UPR\n");
         incrementAndLimit(r, +1);
 		
     } else if (pressedKey == IR_UPG) {
-        Serial.println("IR_UPG");
+        printf("IR_UPG\n");
         incrementAndLimit(g, +1);
 		
     } else if (pressedKey == IR_UPB) {
-        Serial.println("IR_UPB");
+        printf("IR_UPB\n");
         incrementAndLimit(b, +1);
 		
     } else if (pressedKey == IR_DOWNR) {
-        Serial.println("IR_DOWNR");
+        printf("IR_DOWNR\n");
         incrementAndLimit(r, -1);
 		
     } else if (pressedKey == IR_DOWNG) {
-        Serial.println("IR_DOWNG");
+        printf("IR_DOWNG\n");
         incrementAndLimit(g, -1);
 		
     } else if (pressedKey == IR_DOWNB) {
-        Serial.println("IR_DOWNB");
+        printf("IR_DOWNB\n");
         incrementAndLimit(b, -1);
     }
 	getHex(r, g, b);
@@ -169,8 +168,8 @@ void getHex(int red, int green, int blue) {
   long rgb = 0;
   rgb = ((long)red << 16) | ((long)green << 8 ) | (long)blue;
 	
-  Serial.println("R: " + String(red) + " | " + "G: " + String(green) + " | " + "B: " + String(blue));
-  Serial.println("Hex: 0x" + String(rgb, HEX));
+  printf("R: " + String(red) + " | " + "G: " + String(green) + " | " + "B: " + String(blue) + "\n");
+  printf("Hex: 0x" + String(rgb, HEX) + "\n");
   //hexString = String(rgb, HEX)
   //setHex();
 }
@@ -205,20 +204,10 @@ int getV() { // Acho que dá pra melhorar o nome dessa classe
 
 //For serial debugging only
 void showValues() {
-  Serial.print("Status on/off: ");
-  Serial.println(state);
-  Serial.print("RGB color: ");
-  Serial.print(r);
-  Serial.print(".");
-  Serial.print(g);
-  Serial.print(".");
-  Serial.println(b);
-  Serial.print("Hex color: ");
-  Serial.println(hexString);
-  getV();
-  Serial.print("Brightness: ");
-  Serial.println(String(getV()));
-  Serial.println("");
+	printf("%s %d\n", "Status on/off:", state);
+	printf("%s %d | %d | %d\n", "RGB color:", r, g, b);
+	printf("%s %s\n", "Hex color:", hexString);
+	printf("%s %s\n\n", "Brightness:", getV());
 }
 
 void finishProccess() {
@@ -245,32 +234,27 @@ void getIR() {
 	
 	
     if (results.value == IR_R) {    //when button '-' is pressed
-		Serial.println();
-        Serial.println("Vermelho");
+        printf("\nVermelho");
         hexString = "FF0000";
 		finishProccess();
         
     } else if (results.value == IR_G) {    //when button '+' is pressed
-		Serial.println();
-        Serial.println("Verde");
+		printf("\nVerde");
         hexString = "00FF00";
 		finishProccess();
         
     } else if (results.value == IR_B) {    //when button '|<<' is pressed
-		Serial.println();
-        Serial.println("Azul");
+		printf("\nAzul");
         hexString = "0000FF";
 		finishProccess();
         
     } else if (results.value == IR_OnOff) {    //when button 'ON/OFF' is pressed
         lastCode = results.value;      // record this as last good command
         if (state == 0) { // se estiver desligado, liga com a ultima cor ainda guardada na variavel hexString
-			Serial.println();
-            Serial.println("Liga");
+			printf("\nLiga");
             setHex();
         } else { // se estiver ligado, executa o procedimento para desligar todos as cores
-			Serial.println();
-            Serial.println("Desliga");
+			printf("\nDesliga");
             allOff();
         }
     }
