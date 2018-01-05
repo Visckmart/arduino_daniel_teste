@@ -195,7 +195,9 @@ int getV() { // Acho que dá pra melhorar o nome dessa classe
 	R = roundf(r / 10.23); //for 10bit pwm, was (r/2.55);
 	G = roundf(g / 10.23); //for 10bit pwm, was (g/2.55);
 	B = roundf(b / 10.23); //for 10bit pwm, was (b/2.55);
-    return _max({R, G, B});
+	x = _max(R, G);
+	V = _max(x, B); // (+) e dessa variável
+	return V;
 }
 
 void rainbow() {
