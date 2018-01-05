@@ -88,7 +88,8 @@ void WiFiStart() {
     delay(100);
     Serial.print("_");
   }
-  Serial.println("\n" + "Done");
+	Serial.println();
+  Serial.println("Done");
   Serial.print("IP address: " + String(WiFi.localIP()) + "\n\n");
 
   server.begin();
@@ -169,7 +170,7 @@ void getHex(int red, int green, int blue) {
   long rgb = 0;
   rgb = ((long)red << 16) | ((long)green << 8 ) | (long)blue;
 	
-  Serial.println("R: " + String(red) " | " + "G: " + String(green) + " | " + "B: " + String(blue));
+  Serial.println("R: " + String(red) + " | " + "G: " + String(green) + " | " + "B: " + String(blue));
   Serial.println("Hex: 0x" + String(rgb, HEX));
   //hexString = String(rgb, HEX)
   //setHex();
@@ -230,6 +231,11 @@ void showValues() {
   Serial.println("");
 }
 
+void finishProccess() {
+	lastCode = results.value;     // record this as last good command
+	setHex();
+}
+
 void getIR() {
   /*Blink Built-in LED after receiving a code
     digitalWrite(LED_BUILTIN, HIGH);
@@ -247,10 +253,6 @@ void getIR() {
 
 	// Deveria ter um 'return;' dentro de cada if desse pra ele não continuar lá pra baixo na função, não?
 	
-	void finishProccess() {
-		lastCode = results.value;     // record this as last good command
-		setHex();
-	}
 	
     if (results.value == IR_R) {    //when button '-' is pressed
 		Serial.println();
