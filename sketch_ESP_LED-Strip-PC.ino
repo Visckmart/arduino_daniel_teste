@@ -160,8 +160,6 @@ void setRGBBrightnessIR(long pressedKey) {
 
 // MARK: Color functions
 
-const char* rainbowHex [6] = {"FF0000", "FF7F00", "FFFF00", "00FF00", "0000FF", "8B00FF"};
-
 // depende da função anterior para saber se funciona haha
 void getHex(int red, int green, int blue) {
   red = map(red, 0, 1023, 0, 255);
@@ -190,16 +188,6 @@ void setHex() {
   analogWrite(redPin, (r));
   analogWrite(grnPin, (g));
   analogWrite(bluPin, (b));
-}
-
-void rainbow() {
-	while (true) {
-		for( unsigned int a = 0; a < sizeof(rainbowHex)/sizeof(rainbowHex[0]); a = a + 1 ) {
-			hexString = rainbowHex[a];
-			setHex();
-			delay(0.5);
-		}
-	}
 }
 
 
@@ -305,7 +293,6 @@ void getIR() {
     lastCode = results.value;      // record this as last good command
     setRGBBrightnessIR(results.value);
   }
-	rainbow();
 
   /*
     if(results.value == 0xFFC23D)     //when button '>>|' is pressed
@@ -357,36 +344,29 @@ void loop() {
           client.println("Content-Type: text/html");
           //client.println("Connection: close");
           client.println();
-			rainbow()
 
           if (readString.indexOf("on") > 0) { // On
             setHex();
-			  rainbow();
             //showValues();
               
           } else if (readString.indexOf("off") > 0) { // Off
             allOff();
-			  rainbow();
             //showValues();
               
           } else if (readString.indexOf("set") > 0) { // Set color
             hexString = "";
             hexString = (readString.substring(9, 15));
             setHex();
-			  rainbow();
             //showValues();
               
           } else if (readString.indexOf("status") > 0) { // Status on/off
             client.println(state);
-			  rainbow();
               
           } else if (readString.indexOf("color") > 0) { // Status color (hex)
             client.println(hexString);
-			  rainbow();
               
           } else if (readString.indexOf("bright") > 0) { // Status brightness (%)
             client.println(getV());
-			  rainbow();
           }
 
           showValues(); //REMOVER!!!
