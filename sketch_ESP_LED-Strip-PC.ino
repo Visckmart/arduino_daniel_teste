@@ -87,10 +87,10 @@ void WiFiStart() {
     delay(100);
     printf("_");
   }
-	printf("Done");
-	printf("IP address: ");
-	printf(WiFi.localIP());
-	printf("\n");
+  printf("Done");
+  printf("IP address: ");
+  printf(WiFi.localIP());
+  printf("\n");
 
   server.begin();
 }
@@ -117,44 +117,44 @@ void setBrightnessIR(long pressedKey) {
 
 // talvez funcione, deu erro antes, naqueles ifs
 int incrementAndLimit(int &val, int increment) {
-	val += increment; // This will sum or subtract the value of increment from val. So far only +1 and -1 are being used.
-	
-	// Defensive driving: making sure val stays in the range 0-1023
-	if (val > 1023) { val = 1023; }
-	else if (val < 0) { val = 0; }
-	
-	return val;
+  val += increment; // This will sum or subtract the value of increment from val. So far only +1 and -1 are being used.
+  
+  // Defensive driving: making sure val stays in the range 0-1023
+  if (val > 1023) { val = 1023; }
+  else if (val < 0) { val = 0; }
+  
+  return val;
 }
 
 // testar
 void setRGBBrightnessIR(long pressedKey) {
-	printf("\n");
-	
-    if (pressedKey == IR_UPR) {
-        printf("IR_UPR\n");
-        incrementAndLimit(r, +1);
-		
-    } else if (pressedKey == IR_UPG) {
-        printf("IR_UPG\n");
-        incrementAndLimit(g, +1);
-		
-    } else if (pressedKey == IR_UPB) {
-        printf("IR_UPB\n");
-        incrementAndLimit(b, +1);
-		
-    } else if (pressedKey == IR_DOWNR) {
-        printf("IR_DOWNR\n");
-        incrementAndLimit(r, -1);
-		
-    } else if (pressedKey == IR_DOWNG) {
-        printf("IR_DOWNG\n");
-        incrementAndLimit(g, -1);
-		
-    } else if (pressedKey == IR_DOWNB) {
-        printf("IR_DOWNB\n");
-        incrementAndLimit(b, -1);
-    }
-	getHex(r, g, b);
+  printf("\n");
+  
+  if (pressedKey == IR_UPR) {
+    printf("IR_UPR\n");
+    incrementAndLimit(r, +1);
+
+  } else if (pressedKey == IR_UPG) {
+    printf("IR_UPG\n");
+    incrementAndLimit(g, +1);
+
+  } else if (pressedKey == IR_UPB) {
+    printf("IR_UPB\n");
+    incrementAndLimit(b, +1);
+
+  } else if (pressedKey == IR_DOWNR) {
+    printf("IR_DOWNR\n");
+    incrementAndLimit(r, -1);
+
+  } else if (pressedKey == IR_DOWNG) {
+    printf("IR_DOWNG\n");
+    incrementAndLimit(g, -1);
+
+  } else if (pressedKey == IR_DOWNB) {
+    printf("IR_DOWNB\n");
+    incrementAndLimit(b, -1);
+  }
+  getHex(r, g, b);
 }
 
 // MARK: Color functions
@@ -164,10 +164,10 @@ void getHex(int red, int green, int blue) {
   red = map(red, 0, 1023, 0, 255);
   green = map(green, 0, 1023, 0, 255);
   blue = map(blue, 0, 1023, 0, 255);
-	
+
   long rgb = 0;
   rgb = ((long)red << 16) | ((long)green << 8 ) | (long)blue;
-	
+
   printf("R: " + String(red) + " | " + "G: " + String(green) + " | " + "B: " + String(blue) + "\n");
   printf("Hex: 0x" + String(rgb, HEX) + "\n");
   //hexString = String(rgb, HEX)
@@ -192,27 +192,27 @@ void setHex() {
 
 //Compute current brightness value
 int getV() { // Acho que dá pra melhorar o nome dessa classe
-	R = roundf(r / 10.23); //for 10bit pwm, was (r/2.55);
-	G = roundf(g / 10.23); //for 10bit pwm, was (g/2.55);
-	B = roundf(b / 10.23); //for 10bit pwm, was (b/2.55);
-	x = _max(R, G);
-	V = _max(x, B); // (+) e dessa variável
-	return V;
+  R = roundf(r / 10.23); //for 10bit pwm, was (r/2.55);
+  G = roundf(g / 10.23); //for 10bit pwm, was (g/2.55);
+  B = roundf(b / 10.23); //for 10bit pwm, was (b/2.55);
+  x = _max(R, G);
+  V = _max(x, B); // (+) e dessa variável
+  return V;
 }
 
 // MARK: Debug functions
 
 //For serial debugging only
 void showValues() {
-	printf("%s %d\n", "Status on/off:", state);
-	printf("%s %d | %d | %d\n", "RGB color:", r, g, b);
-	printf("%s %s\n", "Hex color:", hexString);
-	printf("%s %s\n\n", "Brightness:", getV());
+  printf("%s %d\n", "Status on/off:", state);
+  printf("%s %d | %d | %d\n", "RGB color:", r, g, b);
+  printf("%s %s\n", "Hex color:", hexString);
+  printf("%s %s\n\n", "Brightness:", getV());
 }
 
 void finishProccess() {
-	lastCode = results.value;     // record this as last good command
-	setHex();
+  lastCode = results.value;     // record this as last good command
+  setHex();
 }
 
 void getIR() {
@@ -222,50 +222,44 @@ void getIR() {
     digitalWrite(LED_BUILTIN, LOW);
   */
 
-    // funciona
-    if (results.value == IR_REPEAT && results.value != IR_OnOff) {  // if repeat command (button held down)
-        results.value = lastCode;      // replace FFFF with last good code
-    } else {
-        lastCode = 0;
-    }
+  // funciona
+  if (results.value == IR_REPEAT && results.value != IR_OnOff) {  // if repeat command (button held down)
+    results.value = lastCode;      // replace FFFF with last good code
+  } else {
+    lastCode = 0;
+  }
 
+  if (results.value == IR_R) {    //when button '-' is pressed
+    printf("\nVermelho");
+    hexString = "FF0000";
+    finishProccess();
+  } else if (results.value == IR_G) {    //when button '+' is pressed
+    printf("\nVerde");
+    hexString = "00FF00";
+    finishProccess();
+  } else if (results.value == IR_B) {    //when button '|<<' is pressed
+    printf("\nAzul");
+    hexString = "0000FF";
+    finishProccess();
 
-	// Deveria ter um 'return;' dentro de cada if desse pra ele não continuar lá pra baixo na função, não?
-	
-	
-    if (results.value == IR_R) {    //when button '-' is pressed
-        printf("\nVermelho");
-        hexString = "FF0000";
-		finishProccess();
-        
-    } else if (results.value == IR_G) {    //when button '+' is pressed
-		printf("\nVerde");
-        hexString = "00FF00";
-		finishProccess();
-        
-    } else if (results.value == IR_B) {    //when button '|<<' is pressed
-		printf("\nAzul");
-        hexString = "0000FF";
-		finishProccess();
-        
-    } else if (results.value == IR_OnOff) {    //when button 'ON/OFF' is pressed
-        lastCode = results.value;      // record this as last good command
-        if (state == 0) { // se estiver desligado, liga com a ultima cor ainda guardada na variavel hexString
-			printf("\nLiga");
-            setHex();
-        } else { // se estiver ligado, executa o procedimento para desligar todos as cores
-			printf("\nDesliga");
-            allOff();
-        }
+  } else if (results.value == IR_OnOff) {    //when button 'ON/OFF' is pressed
+    lastCode = results.value;      // record this as last good command
+    if (state == 0) { // se estiver desligado, liga com a ultima cor ainda guardada na variavel hexString
+      printf("\nLiga");
+      setHex();
+    } else { // se estiver ligado, executa o procedimento para desligar todos as cores
+      printf("\nDesliga");
+      allOff();
     }
-    
+  }
+
   // ainda nao desenvolvido - skip
   if (results.value == IR_BPlus)    //when button '>>|' is pressed
   {
     lastCode = results.value;      // record this as last good command
 
   }
-	// ainda nao desenvolvido - skip
+  // ainda nao desenvolvido - skip
   if (results.value == IR_BMinus)    //when button '>>|' is pressed
   {
     lastCode = results.value;      // record this as last good command
@@ -298,18 +292,18 @@ void loop() {
     }
   */
 
-	WiFiClient client = server.available();
-	
-	if (irrecv.decode(&results)) {
-		getIR();
-		showValues();
-	}
-	
-	if (!client) { return; }
-	
-	while (client.connected() && !client.available()) {
-		delay(1);
-	}
+  WiFiClient client = server.available();
+  
+  if (irrecv.decode(&results)) {
+    getIR();
+    showValues();
+  }
+  
+  if (!client) { return; }
+  
+  while (client.connected() && !client.available()) {
+    delay(1);
+  }
 
   //Respond on certain Homebridge HTTP requests
   if (client) {
@@ -332,23 +326,23 @@ void loop() {
           if (readString.indexOf("on") > 0) { // On
             setHex();
             //showValues();
-              
+
           } else if (readString.indexOf("off") > 0) { // Off
             allOff();
             //showValues();
-              
+
           } else if (readString.indexOf("set") > 0) { // Set color
             hexString = "";
             hexString = (readString.substring(9, 15));
             setHex();
             //showValues();
-              
+
           } else if (readString.indexOf("status") > 0) { // Status on/off
             client.println(state);
-              
+
           } else if (readString.indexOf("color") > 0) { // Status color (hex)
             client.println(hexString);
-              
+
           } else if (readString.indexOf("bright") > 0) { // Status brightness (%)
             client.println(getV());
           }
