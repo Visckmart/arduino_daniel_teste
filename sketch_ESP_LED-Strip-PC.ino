@@ -217,10 +217,27 @@ int getV() { // Acho que dá pra melhorar o nome dessa classe
 
 //For serial debugging only
 void showValues() {
+<<<<<<< HEAD
   printf("%s %d\n", "Status on/off:", state);
   printf("%s %d | %d | %d\n", "RGB color:", r, g, b);
   printf("%s %s\n", "Hex color:", hexString);
   printf("%s %s\n\n", "Brightness:", getV());
+=======
+  Serial.print("Status on/off: ");
+  Serial.println(state);
+  Serial.print("RGB color: ");
+  Serial.print(r);
+  Serial.print(".");
+  Serial.print(g);
+  Serial.print(".");
+  Serial.println(b);
+  Serial.print("Hex color: ");
+  Serial.println(hexString);
+  getV();
+  Serial.print("Brightness: ");
+  Serial.println(V);
+  Serial.println("");
+>>>>>>> parent of 76520a5... Consertei o brightness
 }
 
 
