@@ -189,6 +189,19 @@ void setHex() {
   analogWrite(bluPin, (b));
 }
 
+int rainbowState = -1;
+unsigned long lastColorChangeTime = 0;
+unsigned long colorDelay = 500;
+const char* rainbowHex [6] = {"FF0000", "FF7F00", "FFFF00", "00FF00", "0000FF", "8B00FF"};
+void rainbow() {
+  if ((millis() - lastColorChangeTime) > colorDelay) {
+    hexString = rainbowHex[rainbowState]
+    setHex()
+    lastColorChangeTime = millis()
+    rainbowState = (rainbowState+1)%6
+  }
+}
+
 
 //Compute current brightness value
 int getV() { // Acho que dá pra melhorar o nome dessa classe
@@ -210,10 +223,6 @@ void showValues() {
   printf("%s %s\n\n", "Brightness:", getV());
 }
 
-void finishProccess() {
-  lastCode = results.value;     // record this as last good command
-  setHex();
-}
 
 void getIR() {
   /*Blink Built-in LED after receiving a code
@@ -232,15 +241,26 @@ void getIR() {
   if (results.value == IR_R) {    //when button '-' is pressed
     printf("\nVermelho");
     hexString = "FF0000";
-    finishProccess();
+    lastCode = results.value;     // record this as last good command
+    setHex();
   } else if (results.value == IR_G) {    //when button '+' is pressed
     printf("\nVerde");
     hexString = "00FF00";
-    finishProccess();
+    lastCode = results.value;     // record this as last good command
+    setHex();
   } else if (results.value == IR_B) {    //when button '|<<' is pressed
     printf("\nAzul");
     hexString = "0000FF";
-    finishProccess();
+    lastCode = results.value;     // record this as last good command
+    setHex();
+  } else if (results.value == ) {
+    printf("\nArco-íris");
+    if rainbowState == -1 {
+      rainbowState = 0
+      rainbow()
+    } else {
+      rainbowState = -1
+    }
 
   } else if (results.value == IR_OnOff) {    //when button 'ON/OFF' is pressed
     lastCode = results.value;      // record this as last good command
@@ -293,10 +313,15 @@ void loop() {
   */
 
   WiFiClient client = server.available();
+
   
   if (irrecv.decode(&results)) {
     getIR();
     showValues();
+  }
+
+  if (rainbowState != -1) {
+    rainbow()
   }
   
   if (!client) { return; }
