@@ -87,11 +87,11 @@ void WiFiStart() {
     delay(100);
     Serial.print("_");
   }
-	Serial.println();
+  Serial.println();
   Serial.println("Done");
-	Serial.print("IP address: ");
-	Serial.println(WiFi.localIP());
-	Serial.println("");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+  Serial.println("");
 
   server.begin();
 }
@@ -130,32 +130,32 @@ int incrementAndLimit(int &val, int increment) {
 // testar
 void setRGBBrightnessIR(long pressedKey) {
     Serial.println();
-	
+  
     if (pressedKey == IR_UPR) {
         Serial.println("IR_UPR");
         incrementAndLimit(r, +1);
-		
+    
     } else if (pressedKey == IR_UPG) {
         Serial.println("IR_UPG");
         incrementAndLimit(g, +1);
-		
+    
     } else if (pressedKey == IR_UPB) {
         Serial.println("IR_UPB");
         incrementAndLimit(b, +1);
-		
+    
     } else if (pressedKey == IR_DOWNR) {
         Serial.println("IR_DOWNR");
         incrementAndLimit(r, -1);
-		
+    
     } else if (pressedKey == IR_DOWNG) {
         Serial.println("IR_DOWNG");
         incrementAndLimit(g, -1);
-		
+    
     } else if (pressedKey == IR_DOWNB) {
         Serial.println("IR_DOWNB");
         incrementAndLimit(b, -1);
     }
-	getHex(r, g, b);
+  getHex(r, g, b);
 }
 
 // MARK: Color functions
@@ -165,10 +165,10 @@ void getHex(int red, int green, int blue) {
   red = map(red, 0, 1023, 0, 255);
   green = map(green, 0, 1023, 0, 255);
   blue = map(blue, 0, 1023, 0, 255);
-
+  
   long rgb = 0;
   rgb = ((long)red << 16) | ((long)green << 8 ) | (long)blue;
-	
+  
   Serial.println("R: " + String(red) + " | " + "G: " + String(green) + " | " + "B: " + String(blue));
   Serial.println("Hex: 0x" + String(rgb, HEX));
   //hexString = String(rgb, HEX)
@@ -190,19 +190,6 @@ void setHex() {
   analogWrite(bluPin, (b));
 }
 
-int rainbowState = -1;
-unsigned long lastColorChangeTime = 0;
-unsigned long colorDelay = 500;
-const char* rainbowHex [6] = {"FF0000", "FF7F00", "FFFF00", "00FF00", "0000FF", "8B00FF"};
-void rainbow() {
-  if ((millis() - lastColorChangeTime) > colorDelay) {
-    hexString = rainbowHex[rainbowState]
-    setHex()
-    lastColorChangeTime = millis()
-    rainbowState = (rainbowState+1)%6
-  }
-}
-
 
 //Compute current brightness value
 int getV() { // Acho que dá pra melhorar o nome dessa classe
@@ -218,15 +205,6 @@ int getV() { // Acho que dá pra melhorar o nome dessa classe
 
 //For serial debugging only
 void showValues() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-  printf("%s %d\n", "Status on/off:", state);
-  printf("%s %d | %d | %d\n", "RGB color:", r, g, b);
-  printf("%s %s\n", "Hex color:", hexString);
-  printf("%s %s\n\n", "Brightness:", getV());
-=======
-=======
->>>>>>> parent of 4d92255... Troquei os Serial.print e println pra só printf.
   Serial.print("Status on/off: ");
   Serial.println(state);
   Serial.print("RGB color: ");
@@ -239,16 +217,14 @@ void showValues() {
   Serial.println(hexString);
   getV();
   Serial.print("Brightness: ");
-<<<<<<< HEAD
-  Serial.println(V);
-  Serial.println("");
->>>>>>> parent of 76520a5... Consertei o brightness
-=======
   Serial.println(String(getV()));
   Serial.println("");
->>>>>>> parent of 4d92255... Troquei os Serial.print e println pra só printf.
 }
 
+void finishProccess() {
+  lastCode = results.value;     // record this as last good command
+  setHex();
+}
 
 void getIR() {
   /*Blink Built-in LED after receiving a code
@@ -257,84 +233,48 @@ void getIR() {
     digitalWrite(LED_BUILTIN, LOW);
   */
 
-  // funciona
-  if (results.value == IR_REPEAT && results.value != IR_OnOff) {  // if repeat command (button held down)
-    results.value = lastCode;      // replace FFFF with last good code
-  } else {
-    lastCode = 0;
-  }
-
-  if (results.value == IR_R) {    //when button '-' is pressed
-    printf("\nVermelho");
-    hexString = "FF0000";
-    lastCode = results.value;     // record this as last good command
-    setHex();
-  } else if (results.value == IR_G) {    //when button '+' is pressed
-    printf("\nVerde");
-    hexString = "00FF00";
-    lastCode = results.value;     // record this as last good command
-    setHex();
-  } else if (results.value == IR_B) {    //when button '|<<' is pressed
-    printf("\nAzul");
-    hexString = "0000FF";
-    lastCode = results.value;     // record this as last good command
-    setHex();
-  } else if (results.value == ) {
-    printf("\nArco-íris");
-    if rainbowState == -1 {
-      rainbowState = 0
-      rainbow()
+    // funciona
+    if (results.value == IR_REPEAT && results.value != IR_OnOff) {  // if repeat command (button held down)
+        results.value = lastCode;      // replace FFFF with last good code
     } else {
-      rainbowState = -1
+        lastCode = 0;
     }
 
-<<<<<<< HEAD
-  } else if (results.value == IR_OnOff) {    //when button 'ON/OFF' is pressed
-    lastCode = results.value;      // record this as last good command
-    if (state == 0) { // se estiver desligado, liga com a ultima cor ainda guardada na variavel hexString
-      printf("\nLiga");
-      setHex();
-    } else { // se estiver ligado, executa o procedimento para desligar todos as cores
-      printf("\nDesliga");
-      allOff();
-=======
 
-	// Deveria ter um 'return;' dentro de cada if desse pra ele não continuar lá pra baixo na função, não?
-	
-	
+  // Deveria ter um 'return;' dentro de cada if desse pra ele não continuar lá pra baixo na função, não?
+  
+  
     if (results.value == IR_R) {    //when button '-' is pressed
-		Serial.println();
+    Serial.println();
         Serial.println("Vermelho");
         hexString = "FF0000";
-		finishProccess();
+    finishProccess();
         
     } else if (results.value == IR_G) {    //when button '+' is pressed
-		Serial.println();
+    Serial.println();
         Serial.println("Verde");
         hexString = "00FF00";
-		finishProccess();
+    finishProccess();
         
     } else if (results.value == IR_B) {    //when button '|<<' is pressed
-		Serial.println();
+    Serial.println();
         Serial.println("Azul");
         hexString = "0000FF";
-		finishProccess();
+    finishProccess();
         
     } else if (results.value == IR_OnOff) {    //when button 'ON/OFF' is pressed
         lastCode = results.value;      // record this as last good command
         if (state == 0) { // se estiver desligado, liga com a ultima cor ainda guardada na variavel hexString
-			Serial.println();
+      Serial.println();
             Serial.println("Liga");
             setHex();
         } else { // se estiver ligado, executa o procedimento para desligar todos as cores
-			Serial.println();
+      Serial.println();
             Serial.println("Desliga");
             allOff();
         }
->>>>>>> parent of 4d92255... Troquei os Serial.print e println pra só printf.
     }
-  }
-
+    
   // ainda nao desenvolvido - skip
   if (results.value == IR_BPlus)    //when button '>>|' is pressed
   {
@@ -375,15 +315,10 @@ void loop() {
   */
 
   WiFiClient client = server.available();
-
   
   if (irrecv.decode(&results)) {
     getIR();
     showValues();
-  }
-
-  if (rainbowState != -1) {
-    rainbow()
   }
   
   if (!client) { return; }
@@ -413,23 +348,23 @@ void loop() {
           if (readString.indexOf("on") > 0) { // On
             setHex();
             //showValues();
-
+              
           } else if (readString.indexOf("off") > 0) { // Off
             allOff();
             //showValues();
-
+              
           } else if (readString.indexOf("set") > 0) { // Set color
             hexString = "";
             hexString = (readString.substring(9, 15));
             setHex();
             //showValues();
-
+              
           } else if (readString.indexOf("status") > 0) { // Status on/off
             client.println(state);
-
+              
           } else if (readString.indexOf("color") > 0) { // Status color (hex)
             client.println(hexString);
-
+              
           } else if (readString.indexOf("bright") > 0) { // Status brightness (%)
             client.println(getV());
           }
