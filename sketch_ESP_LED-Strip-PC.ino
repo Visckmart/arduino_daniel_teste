@@ -87,18 +87,11 @@ void WiFiStart() {
     delay(100);
     Serial.print("_");
   }
-<<<<<<< HEAD
-  printf("Done");
-  printf("IP address: ");
-  printf(WiFi.localIP());
-  printf("\n");
-=======
 	Serial.println();
   Serial.println("Done");
 	Serial.print("IP address: ");
 	Serial.println(WiFi.localIP());
 	Serial.println("");
->>>>>>> parent of 4d92255... Troquei os Serial.print e println pra só printf.
 
   server.begin();
 }
@@ -136,35 +129,6 @@ int incrementAndLimit(int &val, int increment) {
 
 // testar
 void setRGBBrightnessIR(long pressedKey) {
-<<<<<<< HEAD
-  printf("\n");
-  
-  if (pressedKey == IR_UPR) {
-    printf("IR_UPR\n");
-    incrementAndLimit(r, +1);
-
-  } else if (pressedKey == IR_UPG) {
-    printf("IR_UPG\n");
-    incrementAndLimit(g, +1);
-
-  } else if (pressedKey == IR_UPB) {
-    printf("IR_UPB\n");
-    incrementAndLimit(b, +1);
-
-  } else if (pressedKey == IR_DOWNR) {
-    printf("IR_DOWNR\n");
-    incrementAndLimit(r, -1);
-
-  } else if (pressedKey == IR_DOWNG) {
-    printf("IR_DOWNG\n");
-    incrementAndLimit(g, -1);
-
-  } else if (pressedKey == IR_DOWNB) {
-    printf("IR_DOWNB\n");
-    incrementAndLimit(b, -1);
-  }
-  getHex(r, g, b);
-=======
     Serial.println();
 	
     if (pressedKey == IR_UPR) {
@@ -192,7 +156,6 @@ void setRGBBrightnessIR(long pressedKey) {
         incrementAndLimit(b, -1);
     }
 	getHex(r, g, b);
->>>>>>> parent of 4d92255... Troquei os Serial.print e println pra só printf.
 }
 
 // MARK: Color functions
@@ -205,15 +168,9 @@ void getHex(int red, int green, int blue) {
 
   long rgb = 0;
   rgb = ((long)red << 16) | ((long)green << 8 ) | (long)blue;
-<<<<<<< HEAD
-
-  printf("R: " + String(red) + " | " + "G: " + String(green) + " | " + "B: " + String(blue) + "\n");
-  printf("Hex: 0x" + String(rgb, HEX) + "\n");
-=======
 	
   Serial.println("R: " + String(red) + " | " + "G: " + String(green) + " | " + "B: " + String(blue));
   Serial.println("Hex: 0x" + String(rgb, HEX));
->>>>>>> parent of 4d92255... Troquei os Serial.print e println pra só printf.
   //hexString = String(rgb, HEX)
   //setHex();
 }
